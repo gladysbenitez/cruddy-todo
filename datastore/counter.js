@@ -48,7 +48,7 @@ exports.getNextUniqueId = (callback) => {
         if(err){
           return( 'null');
         } else { 
-          return callback(null, string);          
+          callback(null, string);          
         }
       });
     }

@@ -16,6 +16,7 @@ exports.create = (text, callback) => {
         if (err) {
           throw ("Error writing file");
         } else {
+          //items[id] = text;
           callback(null, { id, text });
         }
       });
@@ -23,10 +24,21 @@ exports.create = (text, callback) => {
   });
 };
 exports.readAll = (callback) => {
-  var data = _.map(items, (text, id) => {
-    return { id, text };
+
+  fs.readdir(exports.dataDir, (err,files) => {
+    if (err) {
+      throw ("Error readiing all");
+    } else {
+      return files.map(file => {
+        callback();
+      });
+    }
   });
-  callback(null, data);
+
+  // var files = _.map(dataDir, (text, id) => {
+  //   return { id, text };
+  // });
+  // callback(null, files);
 };
 
 exports.readOne = (id, callback) => {
