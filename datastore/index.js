@@ -10,11 +10,13 @@ var items = {};
 exports.create = (text, callback) => {
   counter.getNextUniqueId((err,id)=>{
     if(err){
-      throw ("Error creating");
+      // throw ("Error creating");
+      callback(err);
     } else {
       fs.writeFile(`${exports.dataDir}/${id}.txt`,text, (err) => {
         if (err) {
-          throw ("Error writing file");
+          // throw ("Error writing file");
+          callback(err);
         } else {
           //items[id] = text;
           callback(null, { id, text });
@@ -27,7 +29,8 @@ exports.readAll = (callback) => {
 
   fs.readdir(exports.dataDir, (err,files) => {
     if (err) {
-      throw ("Error readiing all");
+      // throw ("Error readiing all");
+      callback(err);
     } else {
       files = files.map(file => {
         let id = file.substring(0, file.length - 4);
@@ -44,11 +47,9 @@ exports.readAll = (callback) => {
 };
 
 exports.readOne = (id, callback) => {
-
   //use id to locate correct file
   //call rs.readFile on the correct file
   //use our callback to read content
-
   fileEnd = id + ".txt";
   file = path.join(exports.dataDir, fileEnd);
   fs.readFile(file, (err,text) => {
@@ -58,23 +59,27 @@ exports.readOne = (id, callback) => {
       callback(null, { id:id, text: text.toString() });
     }
   });
-
-  // var text = items[id];
-  // if (!text) {
-  //   callback(new Error(`No item with id: ${id}`));
-  // } else {
-  //   callback(null, { id, text });
-  // }
 };
 
 exports.update = (id, text, callback) => {
-  var item = items[id];
-  if (!item) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    items[id] = text;
-    callback(null, { id, text });
-  }
+  // find the file by id 
+  // overwrite the text //fs write file
+
+  //fileEnd = id + ".txt";
+  //file = path.join(exports.dataDir, fileEnd);
+  fs.readFile(path.join(exports.dataDir, id )+'.txt', (err) => {
+    if (err) {
+      callback(err);
+    } else {
+      fs.writeFile(path.join(exports.dataDir, id )+'.txt', text, (err)=> {
+        if (err){
+          callback(err);
+        } else {
+          callback(null, { id, text});
+        }
+      });
+    }
+  });
 };
 
 exports.delete = (id, callback) => {
