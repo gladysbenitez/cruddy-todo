@@ -29,9 +29,11 @@ exports.readAll = (callback) => {
     if (err) {
       throw ("Error readiing all");
     } else {
-      return files.map(file => {
-        callback();
+      files = files.map(file => {
+        let id = file.substring(0, file.length - 4);
+        return {id: id, text: id}; 
       });
+      callback(null,files);
     }
   });
 
